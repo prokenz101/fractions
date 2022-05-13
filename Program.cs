@@ -1,7 +1,7 @@
 ﻿namespace fractions {
     public class Program {
         static void Main(string[] args) {
-            //* do X with the Fraction and MixedFraction classes
+            //* You can do whatever with the Fraction and MixedFraction class
 
             //* Examples:
             Fraction myFraction1 = new("1/2");
@@ -29,6 +29,10 @@
             //* Converting fractions to Decimal
             Fraction myFraction3 = new("1/2");
             myFraction3.ToDecimal();
+
+            //* Convering fractions to percentage
+            Fraction myFraction4 = new("1/2");
+            myFraction4.ToPercentage();
         }
     }
 
@@ -94,6 +98,10 @@
 
             //* return new fraction
             return new Fraction(Numerator / gcd + "/" + Denominator / gcd);
+        }
+
+        public double ToPercentage() {
+            return (double)Numerator / Denominator * 100;
         }
 
         public static Fraction SimplifyIfRequired(Fraction fc, bool simplify) {
