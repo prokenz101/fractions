@@ -54,9 +54,7 @@
             }
         }
 
-        public override string ToString() {
-            return $"{Numerator}/{Denominator}";
-        }
+        public override string ToString() { return $"{Numerator}/{Denominator}"; }
 
         public MixedFraction ToMixedFraction() {
             (int Quotient, int Remainder) = Math.DivRem(Numerator, Denominator);
@@ -65,14 +63,21 @@
             return new MixedFraction(Quotient, $"{Remainder}/{Denominator}");
         }
 
-        public double ToDecimal() {
-            return (double)Numerator / Denominator;
-        }
+        public double ToDecimal() { return (double)Numerator / Denominator; }
+
+        public double ToPercentage() { return (double)Numerator / Denominator * 100; }
+
+        public bool IsProper() { return this.Denominator >= this.Numerator; }
+
+        public bool IsImproper() { return this.Denominator < this.Numerator; }
+
+        public static bool IsLike(Fraction fc1, Fraction fc2) { return fc1.Denominator == fc2.Denominator; }
+
+        public static bool IsUnlike(Fraction fc1, Fraction fc2) { return fc1.Denominator != fc2.Denominator; }
 
         public static Fraction Add(Fraction fc1, Fraction fc2, bool simplify = true) {
             int lcm = LCM.FindLCM(new int[] { fc1.Denominator, fc2.Denominator });
             int numerator = fc1.Numerator * (lcm / fc1.Denominator) + fc2.Numerator * (lcm / fc2.Denominator);
-
             return SimplifyIfRequired(new Fraction(numerator.ToString() + "/" + lcm.ToString()), simplify);
         }
 
@@ -83,12 +88,13 @@
         }
 
         public static Fraction Multiply(Fraction fc1, Fraction fc2, bool simplify = true) {
-            return SimplifyIfRequired(new Fraction($"{fc1.Numerator * fc2.Numerator}/{fc1.Denominator * fc2.Denominator}"), simplify);
+            return SimplifyIfRequired(
+                new Fraction($"{fc1.Numerator * fc2.Numerator}/{fc1.Denominator * fc2.Denominator}"), simplify
+            );
         }
 
         public static Fraction Divide(Fraction fc1, Fraction fc2, bool simplify = true) {
             Fraction reciprocal = new Fraction($"{fc2.Denominator}/{fc2.Numerator}");
-
             return SimplifyIfRequired(Fraction.Multiply(fc1, reciprocal), simplify);
         }
 
@@ -98,10 +104,6 @@
 
             //* return new fraction
             return new Fraction(Numerator / gcd + "/" + Denominator / gcd);
-        }
-
-        public double ToPercentage() {
-            return (double)Numerator / Denominator * 100;
         }
 
         public static Fraction SimplifyIfRequired(Fraction fc, bool simplify) {
@@ -131,9 +133,7 @@
             Denominator = int.Parse(parts[1]);
         }
 
-        public override string ToString() {
-            return $"{WholeNumber} {Numerator}/{Denominator}";
-        }
+        public override string ToString() { return $"{WholeNumber} {Numerator}/{Denominator}"; }
 
         public Fraction ToImproperFraction() {
             return new Fraction($"{(WholeNumber * Denominator) + Numerator}/{Denominator}");
@@ -193,6 +193,7 @@
                     } else if (element_array[i] < 0) {
                         element_array[i] = element_array[i] * (-1);
                     }
+
                     if (element_array[i] == 1) {
                         counter++;
                     }
