@@ -1,4 +1,6 @@
-﻿namespace fractions {
+﻿using System.Numerics;
+
+namespace fractions {
     public class Program {
         static void Main(string[] args) {
             //* You can do whatever with the Fraction and MixedFraction class
@@ -37,8 +39,8 @@
     }
 
     public class Fraction {
-        public int Numerator { get; set; }
-        public int Denominator { get; set; }
+        public BigInteger Numerator { get; set; }
+        public BigInteger Denominator { get; set; }
 
         public Fraction(string fraction) {
             if (!(fraction.Contains('/'))) {
@@ -46,8 +48,8 @@
             }
 
             var parts = fraction.Split('/');
-            Numerator = int.Parse(parts[0]);
-            Denominator = int.Parse(parts[1]);
+            Numerator = BigInteger.Parse(parts[0]);
+            Denominator = BigInteger.Parse(parts[1]);
 
             if (Denominator == 0) {
                 throw new DivideByZeroException();
@@ -57,15 +59,16 @@
         public override string ToString() { return $"{Numerator}/{Denominator}"; }
 
         public MixedFraction ToMixedFraction() {
-            (int Quotient, int Remainder) = Math.DivRem(Numerator, Denominator);
+            BigInteger Quotient = Numerator / Denominator;
+            BigInteger Remainder = Numerator % Denominator;
 
             //* Q R/D
             return new MixedFraction(Quotient, $"{Remainder}/{Denominator}");
         }
 
-        public double ToDecimal() { return (double)Numerator / Denominator; }
+        public double ToDecimal() { return (double)(Numerator / Denominator); }
 
-        public double ToPercentage() { return (double)Numerator / Denominator * 100; }
+        public double ToPercentage() { return (double)(Numerator / Denominator) * 100; }
 
         public bool IsProper() { return this.Denominator >= this.Numerator; }
 
@@ -76,14 +79,14 @@
         public static bool IsUnlike(Fraction fc1, Fraction fc2) { return fc1.Denominator != fc2.Denominator; }
 
         public static Fraction Add(Fraction fc1, Fraction fc2, bool simplify = true) {
-            int lcm = LCM.FindLCM(new int[] { fc1.Denominator, fc2.Denominator });
-            int numerator = fc1.Numerator * (lcm / fc1.Denominator) + fc2.Numerator * (lcm / fc2.Denominator);
+            BigInteger lcm = LCM.FindLCM(new BigInteger[] { fc1.Denominator, fc2.Denominator });
+            BigInteger numerator = fc1.Numerator * (lcm / fc1.Denominator) + fc2.Numerator * (lcm / fc2.Denominator);
             return SimplifyIfRequired(new Fraction(numerator.ToString() + "/" + lcm.ToString()), simplify);
         }
 
         public static Fraction Subtract(Fraction fc1, Fraction fc2, bool simplify = true) {
-            int lcm = LCM.FindLCM(new int[] { fc1.Denominator, fc2.Denominator });
-            int numerator = fc1.Numerator * (lcm / fc1.Denominator) - fc2.Numerator * (lcm / fc2.Denominator);
+            BigInteger lcm = LCM.FindLCM(new BigInteger[] { fc1.Denominator, fc2.Denominator });
+            BigInteger numerator = fc1.Numerator * (lcm / fc1.Denominator) - fc2.Numerator * (lcm / fc2.Denominator);
             return SimplifyIfRequired(new Fraction(numerator.ToString() + "/" + lcm.ToString()), simplify);
         }
 
@@ -120,23 +123,32 @@
     }
 
     public class MixedFraction {
-        public int WholeNumber { get; set; }
-        public int Numerator { get; set; }
-        public int Denominator { get; set; }
+        public BigInteger WholeNumber { get; set; }
+        public BigInteger Numerator { get; set; }
+        public BigInteger Denominator { get; set; }
 
-        public MixedFraction(int wholeNumber, string fraction) {
+        public MixedFraction(BigInteger wholeNumber, string fraction) {
             if (!(fraction.Contains('/'))) { throw new Fraction.NoSlashException(); }
             string[] parts = fraction.Split("/");
 
             WholeNumber = wholeNumber;
-            Numerator = int.Parse(parts[0]);
-            Denominator = int.Parse(parts[1]);
+            Numerator = BigInteger.Parse(parts[0]);
+            Denominator = BigInteger.Parse(parts[1]);
         }
 
         public override string ToString() { return $"{WholeNumber} {Numerator}/{Denominator}"; }
 
         public Fraction ToImproperFraction() {
             return new Fraction($"{(WholeNumber * Denominator) + Numerator}/{Denominator}");
+        }
+
+        public double ToDecimal() {
+            Fraction asImproper = this.ToImproperFraction();
+            return (double)(asImproper.Numerator / asImproper.Denominator);
+        }
+
+        public double ToPercentage() {
+            return (double)(this.ToDecimal() * 100);
         }
 
         public MixedFraction ToSimplestForm() {
@@ -179,9 +191,9 @@
     }
 
     public class LCM {
-        public static int FindLCM(int[] element_array) {
-            int lcm_of_array_elements = 1;
-            int divisor = 2;
+        public static BigInteger FindLCM(BigInteger[] element_array) {
+            BigInteger lcm_of_array_elements = 1;
+            BigInteger divisor = 2;
 
             while (true) {
                 int counter = 0;
@@ -218,18 +230,17 @@
     }
 
     public class HCF {
-        public static int FindHCF(int a, int b) {
-            if (a == 0)
-                return b;
+        public static BigInteger FindHCF(BigInteger a, BigInteger b) {
+            if (a == 0) { return b; }
             return FindHCF(b % a, a);
         }
 
         //* Function to find gcd of 
         //* array of numbers
-        public static int FindGCD(int[] arr, int n) {
-            int result = arr[0];
-            for (int i = 1; i < n; i++) {
-                result = FindHCF(arr[i], result);
+        public static BigInteger FindGCD(BigInteger[] arr, BigInteger n) {
+            BigInteger result = arr[0];
+            for (BigInteger i = 1; i < n; i++) {
+                result = FindHCF(arr[(int)i], result);
 
                 if (result == 1) {
                     return 1;
