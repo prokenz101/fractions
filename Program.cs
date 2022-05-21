@@ -117,7 +117,7 @@ namespace fractions {
 
         public Fraction ToSimplestForm() {
             //* get GCD of numerator and denominator
-            int gcd = HCF.FindGCD(new int[] { Numerator, Denominator }, 2);
+            BigInteger gcd = HCF.FindGCD(new BigInteger[] { Numerator, Denominator }, 2);
 
             //* return new fraction
             return new Fraction(Numerator / gcd + "/" + Denominator / gcd);
