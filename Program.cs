@@ -119,8 +119,14 @@ namespace fractions {
             //* get GCD of numerator and denominator
             BigInteger gcd = HCF.FindGCD(new BigInteger[] { Numerator, Denominator }, 2);
 
-            //* return new fraction
-            return new Fraction(Numerator / gcd + "/" + Denominator / gcd);
+            Fraction fractionObtained = new(Numerator / gcd + "/" + Denominator / gcd);
+            if (fractionObtained.Denominator < 0) {
+                //* if denominator is negative, then convert to rational number simplest form
+                fractionObtained.Numerator = 0 - fractionObtained.Numerator;
+                fractionObtained.Denominator = -1 * fractionObtained.Denominator;
+            }
+
+            return fractionObtained;
         }
 
         public static Fraction SimplifyIfRequired(Fraction fc, bool simplify) {
