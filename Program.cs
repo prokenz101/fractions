@@ -78,6 +78,20 @@ namespace fractions {
 
         public static bool IsUnlike(Fraction fc1, Fraction fc2) { return fc1.Denominator != fc2.Denominator; }
 
+        public static Fraction? Operation(Fraction fc1, Fraction fc2, string operation, bool simplify = true) {
+            if (operation == "add") {
+                return Fraction.Add(fc1, fc2, simplify);
+            } else if (operation == "subtract") {
+                return Fraction.Subtract(fc1, fc2, simplify);
+            } else if (operation == "multiply") {
+                return Fraction.Multiply(fc1, fc2, simplify);
+            } else if (operation == "divide") {
+                return Fraction.Divide(fc1, fc2, simplify);
+            } else {
+                return null;
+            }
+        }
+
         public static Fraction Add(Fraction fc1, Fraction fc2, bool simplify = true) {
             BigInteger lcm = LCM.FindLCM(new BigInteger[] { fc1.Denominator, fc2.Denominator });
             BigInteger numerator = fc1.Numerator * (lcm / fc1.Denominator) + fc2.Numerator * (lcm / fc2.Denominator);
@@ -155,6 +169,22 @@ namespace fractions {
             return new MixedFraction(
                 WholeNumber, new Fraction($"{Numerator}/{Denominator}").ToSimplestForm().ToString()
             );
+        }
+
+        public static MixedFraction? Operation(
+            MixedFraction mfc1, MixedFraction mfc2, string operation, bool simplify = true
+        ) {
+            if (operation == "add") {
+                return MixedFraction.Add(mfc1, mfc2, simplify);
+            } else if (operation == "subtract") {
+                return MixedFraction.Subtract(mfc1, mfc2, simplify);
+            } else if (operation == "multiply") {
+                return MixedFraction.Multiply(mfc1, mfc2, simplify);
+            } else if (operation == "divide") {
+                return MixedFraction.Divide(mfc1, mfc2, simplify);
+            } else {
+                return null;
+            }
         }
 
         public static MixedFraction Add(MixedFraction fc1, MixedFraction fc2, bool simplify = true) {
