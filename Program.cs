@@ -21,6 +21,10 @@ namespace fractions {
             MixedFraction.Add(myMixedFraction1, myMixedFraction2);
             MixedFraction.Add(myMixedFraction1, myMixedFraction2, simplify: false); //* Adding without simplifying
 
+            //* Operators also work
+            Console.WriteLine((myFraction1 + myFraction2).ToString());
+            Console.WriteLine((myMixedFraction1 + myMixedFraction2).ToString()); //* Answer will always be simplified
+
             //* Converting between mixed and improper
             MixedFraction willbeConvertedToImproper = new(1, "1/2");
             willbeConvertedToImproper.ToImproperFraction();
@@ -98,11 +102,15 @@ namespace fractions {
             return SimplifyIfRequired(new Fraction(numerator.ToString() + "/" + lcm.ToString()), simplify);
         }
 
+        public static Fraction operator +(Fraction fc1, Fraction fc2) => Fraction.Add(fc1, fc2);
+
         public static Fraction Subtract(Fraction fc1, Fraction fc2, bool simplify = true) {
             BigInteger lcm = LCM.FindLCM(new BigInteger[] { fc1.Denominator, fc2.Denominator });
             BigInteger numerator = fc1.Numerator * (lcm / fc1.Denominator) - fc2.Numerator * (lcm / fc2.Denominator);
             return SimplifyIfRequired(new Fraction(numerator.ToString() + "/" + lcm.ToString()), simplify);
         }
+
+        public static Fraction operator -(Fraction fc1, Fraction fc2) => Fraction.Subtract(fc1, fc2);
 
         public static Fraction Multiply(Fraction fc1, Fraction fc2, bool simplify = true) {
             return SimplifyIfRequired(
@@ -110,10 +118,14 @@ namespace fractions {
             );
         }
 
+        public static Fraction operator *(Fraction fc1, Fraction fc2) => Fraction.Multiply(fc1, fc2);
+
         public static Fraction Divide(Fraction fc1, Fraction fc2, bool simplify = true) {
             Fraction reciprocal = new Fraction($"{fc2.Denominator}/{fc2.Numerator}");
             return SimplifyIfRequired(Fraction.Multiply(fc1, reciprocal), simplify);
         }
+
+        public static Fraction operator /(Fraction fc1, Fraction fc2) => Fraction.Divide(fc1, fc2);
 
         public Fraction ToSimplestForm() {
             //* get GCD of numerator and denominator
@@ -199,11 +211,15 @@ namespace fractions {
             );
         }
 
+        public static MixedFraction operator +(MixedFraction fc1, MixedFraction fc2) => MixedFraction.Add(fc1, fc2);
+
         public static MixedFraction Subtract(MixedFraction fc1, MixedFraction fc2, bool simplify = true) {
             return SimplifyIfRequired(
                 Fraction.Subtract(fc1.ToImproperFraction(), fc2.ToImproperFraction()).ToMixedFraction(), simplify
             );
         }
+
+        public static MixedFraction operator -(MixedFraction fc1, MixedFraction fc2) => MixedFraction.Subtract(fc1, fc2);
 
         public static MixedFraction Multiply(MixedFraction fc1, MixedFraction fc2, bool simplify = true) {
             return SimplifyIfRequired(
@@ -211,11 +227,15 @@ namespace fractions {
             );
         }
 
+        public static MixedFraction operator *(MixedFraction fc1, MixedFraction fc2) => MixedFraction.Multiply(fc1, fc2);
+
         public static MixedFraction Divide(MixedFraction fc1, MixedFraction fc2, bool simplify = true) {
             return SimplifyIfRequired(
                 Fraction.Divide(fc1.ToImproperFraction(), fc2.ToImproperFraction()).ToMixedFraction(), simplify
             );
         }
+
+        public static MixedFraction operator /(MixedFraction fc1, MixedFraction fc2) => MixedFraction.Divide(fc1, fc2);
 
         public static MixedFraction SimplifyIfRequired(MixedFraction mfc, bool simplify) {
             if (simplify) {
